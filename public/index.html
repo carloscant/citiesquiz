@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset=utf-8 />
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
 	<title>Cities Quiz</title>
 	<script src="/js/lib/angular/angular.min.js"></script>
 
@@ -20,7 +22,11 @@
 			text-align: center;
 		}
 
-		.angular-google-map-container { height: 600px; }
+		html, body, .container-fluid{
+		   height:100%;
+		}		
+
+		.angular-google-map-container { height: 500px; }
 	</style>
 
 </head>
@@ -28,13 +34,13 @@
 <div ng-app="citiesQuizApp">
 <div ng-controller="citiesQuizController"  >	
 
-	<div class="container">
+	<div class="container-fluid">
 		<div class="row">
 			<div class="col-md-12">
 				<h1>CITIES QUIZ</h1> 
 			</div>
 		</div>
-		<div class="row">
+		<div class="row" style="height:100%;">
 			<div class="col-md-4">
 				<div class="form-group">
 					<input type="text" class="form-control" id="citiesPlaced" ng-model="citiesPlacedMsg">
