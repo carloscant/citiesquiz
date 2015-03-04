@@ -6,9 +6,10 @@
 
 	<title>Cities Quiz</title>
 	<script src="/js/lib/angular/angular.min.js"></script>
-
 	<script src='/js/lib/lodash/dist/lodash.min.js'></script>
 	<script src='/js/lib/angular-google-maps/dist/angular-google-maps.min.js'></script>	
+
+	<script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.12.1.js"></script>
 
 	<link rel="stylesheet" href="/js/lib/bootstrap/dist/css/bootstrap.min.css">
 
@@ -24,7 +25,20 @@
 
 		html, body, .container-fluid{
 		   height:100%;
-		}		
+		}	
+
+		button{
+			width: 100%;
+		}	
+
+		p{
+			font-size: 30px;
+			color: #aaaaaa;
+		}
+
+		p span{
+			color: #333333;
+		}
 
 		.angular-google-map-container { height: 500px; }
 	</style>
@@ -32,7 +46,7 @@
 </head>
 <body>
 <div ng-app="citiesQuizApp">
-<div ng-controller="citiesQuizController"  >	
+<div ng-controller="citiesQuizMainController"  >	
 
 	<div class="container-fluid">
 		<div class="row">
@@ -43,23 +57,54 @@
 		<div class="row" style="height:100%;">
 			<div class="col-md-4">
 				<div class="form-group">
-					<input type="text" class="form-control" id="citiesPlaced" ng-model="citiesPlacedMsg">
+					<p>{{ citiesPlaced }} cities placed.</p>
 				</div>
 				<div class="form-group">
-					<input type="text" class="form-control" id="kmLeft" ng-model="kmLeftMsg" >
+					<p>{{ kmLeft }} kilometers left.</p>
 				</div>
 				<div class="form-group">
-					Select the location of {{ actualCitieToSearch }}
+					<p><i>Select the location of<i>... <span>{{ cities[actualCitieIndexToSearch].capitalCity }}</span></p>
 				</div>
+				<div class="form-group">
+					<button class="btn btn-success" ng-disabled="noCheck" ng-click="check()">Check!</button>
+				</div>								
+				<div class="form-group">
+					<input type="text" readonly="readonly" class="form-control" id="distanceMsg" ng-model="distanceMsg" >
+				</div>
+				<div class="form-group">
+					<button class="btn btn-primary" ng-disabled="noNext" ng-click="next()">Next</button>
+				</div>								
+
 			</div>
 			<div class="col-md-8">
-				<ui-gmap-google-map center='map.center' zoom='map.zoom'></ui-gmap-google-map>
+				<ui-gmap-google-map center="map.center" zoom="map.zoom" events="map.events" options="map.options">
+					<ui-gmap-marker coords="marker.coords" options="marker.options" events="marker.events" idkey="marker.id">
+        			</ui-gmap-marker>
+					<ui-gmap-marker coords="markerCitie.coords" options="markerCitie.options" events="markerCitie.events" idkey="markerCitie.id">
+        			</ui-gmap-marker>        			
+				</ui-gmap-google-map>
 			</div>
 		</div>
 	</div>
 
+    <script type="text/ng-template" id="endGame.html">
+        <div class="modal-header">
+            <h3 class="modal-title">Your results:</h3>
+        </div>
+        <div class="modal-body">
+            <p>{{ cities }} cities placed.</p>
+            <p>{{ km }} kilometers left.</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" ng-click="ok()">PLAY AGAIN</button>
+        </div>
+    </script>
+
 
 </div>
+
+
+
 </div>
 </body>
 </html>
