@@ -64,6 +64,7 @@ citiesQuizController.controller('citiesQuizMainController', function($window, $s
 			zoom: $scope.zoom,
 			options: {
 				streetViewControl: false,
+				mapTypeControl: false,
 				styles: [
 					{
 						featureType: "road",
@@ -88,16 +89,23 @@ citiesQuizController.controller('citiesQuizMainController', function($window, $s
 					},
 					{
 						featureType: "poi",
-						elementType: "labels",
+						elementType: "all",
 						stylers: [
 						  { visibility: "off" }
 						]
 					},
 					{
-						featureType: "administrative.province",
+						featureType: "administrative",
 						elementType: "all",
 						stylers: [
 						  { visibility: "off" }
+						]
+					},
+					{
+						featureType: "administrative.country",
+						elementType: "geometry.stroke",
+						stylers: [
+						  { visibility: "on" }
 						]
 					}
 
