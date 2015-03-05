@@ -107,20 +107,26 @@ citiesQuizController.controller('citiesQuizMainController', function($window, $s
 	            click: function (mapModel, eventName, originalEventArgs) {
 	            	$scope.$apply(function(){
 
-	            		$scope.noCheck = false;
+	            		//USER CAN MOVE THE MARKER ID THE NEXT BOTON IS NOT VISIBLE 
+	            		if($scope.noNext){
 
-						var e = originalEventArgs[0];
+		            		$scope.noCheck = false;
 
-						$scope.marker = {
-						    id: 0,
-						    coords: {
-						        latitude: e.latLng.lat(),
-						        longitude: e.latLng.lng()
-						    },
-						    options: {
-    							draggable: true
-							}
-						};
+							var e = originalEventArgs[0];
+
+							$scope.marker = {
+							    id: 0,
+							    coords: {
+							        latitude: e.latLng.lat(),
+							        longitude: e.latLng.lng()
+							    },
+							    options: {
+	    							draggable: true
+								}
+							};
+
+	            		}
+
 
 					});
 	            }
