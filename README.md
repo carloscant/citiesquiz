@@ -1,4 +1,4 @@
-I have used the following libraries;
+I have used the following libraries:
 
 - AngularJs.
 - Bootstrap.
