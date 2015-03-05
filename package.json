@@ -8,10 +8,7 @@
   "main": "server.js",
   "author": "Carlos Cantón Marín",
   "dependencies": {
-    "express": "~3.4.4",
-    "mongoose": "~3.6.2",
-    "connect-flash": "0.1.x",
-    "request": "2.45.0"
+    "express": "~3.4.4"
   },
   "scripts": {
     "start": "node server.js"

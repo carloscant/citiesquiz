@@ -7,7 +7,7 @@
 	<title>Cities Quiz</title>
 	<script src="/js/lib/angular/angular.min.js"></script>
 	<script src='/js/lib/lodash/dist/lodash.min.js'></script>
-	<script src='/js/lib/angular-google-maps/dist/angular-google-maps.min.js'></script>	
+	<script src='/js/lib/angular-google-maps/dist/angular-google-maps.js'></script>	
 
 	<script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.12.1.js"></script>
 
@@ -32,7 +32,7 @@
 		}	
 
 		p{
-			font-size: 30px;
+			font-size: 20px;
 			color: #aaaaaa;
 		}
 
@@ -40,7 +40,23 @@
 			color: #333333;
 		}
 
-		.angular-google-map-container { height: 500px; }
+		.green{
+			color: #5cb85c !important;
+			font-weight: bold;
+
+		}
+
+		.red{
+			color: red !important;
+			font-weight: bold;
+		}
+
+		.marker-class{
+			font-size: 15px;
+			font-weight: bold;
+		}
+
+		.angular-google-map-container { height: 450px; }
 	</style>
 
 </head>
@@ -56,23 +72,19 @@
 		</div>
 		<div class="row" style="height:100%;">
 			<div class="col-md-4">
-				<div class="form-group">
-					<p>{{ citiesPlaced }} cities placed.</p>
-				</div>
-				<div class="form-group">
-					<p>{{ kmLeft }} kilometers left.</p>
-				</div>
-				<div class="form-group">
+				<p><span>{{ citiesPlaced }}</span> cities placed .</p>
+				<p><span>{{ kmLeft }}</span> kilometers left.</p>
+				<div ng-show="noNext">
 					<p><i>Select the location of<i>... <span>{{ cities[actualCitieIndexToSearch].capitalCity }}</span></p>
 				</div>
 				<div class="form-group">
-					<button class="btn btn-success" ng-disabled="noCheck" ng-click="check()">Check!</button>
+					<button class="btn btn-success" ng-show="noNext" ng-disabled="noCheck" ng-click="check()">Check!</button>
 				</div>								
+				<div ng-hide="noNext">
+					<p ng-class="{green: placed, red: !placed}"> {{ distanceMsg }} </p>
+				</div>				
 				<div class="form-group">
-					<input type="text" readonly="readonly" class="form-control" id="distanceMsg" ng-model="distanceMsg" >
-				</div>
-				<div class="form-group">
-					<button class="btn btn-primary" ng-disabled="noNext" ng-click="next()">Next</button>
+					<button class="btn btn-primary" ng-hide="noNext" ng-click="next()">Next ( {{ actualCitieIndexToSearch + 1 }} / {{ cities.length }} )</button>
 				</div>								
 
 			</div>

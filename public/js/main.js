@@ -24,6 +24,7 @@ citiesQuizController.controller('citiesQuizMainController', function($scope, $mo
 
 	function init(){
 
+
 		$scope.citiesPlaced = 0;
 		$scope.citiesPlacedMsg = $scope.citiesPlaced + " cities placed.";
 
@@ -36,173 +37,16 @@ citiesQuizController.controller('citiesQuizMainController', function($scope, $mo
 		$scope.noNext = true;
 		$scope.noCheck = true;
 
-		Cities.get().success(function(cities) {
-
-			var geocoder = new google.maps.Geocoder();
-
-			var j = 0;
-
-			for(var i = 0; i < cities.capitalCities.length; i++){
-
-				(function(cityName){
-
-				    geocoder.geocode({'address' : cityName}, function (results, status) {
-
-				    	j++;
-
-				        if (status === google.maps.GeocoderStatus.OK) {
-
-				        	var city = {};
-				        	city.capitalCity = cityName;
-				        	city.lat = results[0].geometry.location.k;
-				        	city.long = results[0].geometry.location.C;
-
-				        	$scope.cities.push(city);
-
-
-				        } else {
-				            console.log("Unknown address: " + cityName);
-				        }
-
-				        //COMPROBAMOS SI YA PODEMOS INICIAR LA APLICACIÓN
-				        if(j == cities.capitalCities.length){
-							start();
-				        }
-
-				    });	
-
-				})(cities.capitalCities[i].capitalCity);
-
-			}
-
-		});
-
-
-	}
-
-	function start(){
-
-		console.log('START GAME');
-
-		$scope.actualCitieIndexToSearch = 0;
-
-	}
-
-	function cleanMap(){
-
-		$scope.map.center.latitude = 49.4;
-		$scope.map.center.longitude = 14.4;
+		$scope.markerCitie = {
+			id: 0		
+		};	
 
 		$scope.marker = {
-			id: 0		
-		};
-
-		$scope.markerCitie = {
-			id: 1		
-		};	
-
-		$scope.distance = 0;
-		$scope.distanceMsg = "";
-
-		$scope.noNext = true;
-		$scope.noCheck = true;		
-
-	}
-
-
-	function showCity(index){
-
-		var city = $scope.cities[index];
-
-		console.log(city);
-
-		$scope.markerCitie = {
-			id: 1,
-			coords: {
-				latitude: city.lat,
-				longitude: city.long
-			}			
-		};
-
-	}
-
-	function distance(){
-
-		var pos1 = new google.maps.LatLng($scope.markerCitie.coords.latitude, $scope.markerCitie.coords.longitude);
-		var pos2 = new google.maps.LatLng($scope.marker.coords.latitude, $scope.marker.coords.longitude);
-
-		$scope.distance = parseInt(google.maps.geometry.spherical.computeDistanceBetween(pos1,pos2) / 1000);
-
-	}
-
-	function endGame(){
-
-		var modalInstance = $modal.open({
-			templateUrl: 'endGame.html',
-			controller: 'EndGameCtrl',
-			resolve: {
-				cities: function(){
-					return $scope.citiesPlaced;
-				},
-				km: function(){
-					return $scope.kmLeft;
-				}
-			}
-		});
-
-		modalInstance.result.then(function () {
-				init();
-			}, function () {
-				init();
-			});
-
-	}	
-
-
-	$scope.check = function(){
-
-		showCity($scope.actualCitieIndexToSearch);
-
-		distance();
-
-		$scope.distanceMsg = $scope.distance + " KM"
-
-		$scope.kmLeft = $scope.kmLeft - $scope.distance;
-
-		if($scope.distance < 50){
-
-			$scope.citiesPlaced = $scope.citiesPlaced + 1;
-
-		}
-
-		$scope.noNext = false;
-		$scope.noCheck = true;		
-
-	}
-
-	$scope.next = function(){
-
-		cleanMap();
-
-		$scope.actualCitieIndexToSearch++;
-
-		if( $scope.actualCitieIndexToSearch >= $scope.cities.length ){
-
-			console.log('END GAME');
-
-			endGame();
-
-		}
-
-	}
-
-	uiGmapGoogleMapApi.then(function(maps) {
-
-		init();
-
-		$scope.markerCitie = {
-			id: 0		
-		};	
+			id: 0,
+			options: {
+	            draggable: true
+	        }			
+		};			
 
 		$scope.map = { center: { latitude: 49.4, longitude: 14.4 }, 
 						zoom: 4,
@@ -271,12 +115,202 @@ citiesQuizController.controller('citiesQuizMainController', function($scope, $mo
 				        }
           			};
 
+
+		Cities.get().success(function(cities) {
+
+			var geocoder = new google.maps.Geocoder();
+
+			var j = 0;
+
+			for(var i = 0; i < cities.capitalCities.length; i++){
+
+				(function(cityName){
+
+				    geocoder.geocode({'address' : cityName}, function (results, status) {
+
+				    	j++;
+
+				        if (status === google.maps.GeocoderStatus.OK) {
+
+				        	console.log(results[0].geometry.location);
+
+				        	var city = {};
+				        	city.capitalCity = cityName;
+				        	city.lat = results[0].geometry.location.k;
+				        	city.long = results[0].geometry.location.B;
+
+				        	$scope.cities.push(city);
+
+
+				        } else {
+				            console.log("Unknown address: " + cityName);
+				        }
+
+				        //COMPROBAMOS SI YA PODEMOS INICIAR LA APLICACIÓN
+				        if(j == cities.capitalCities.length){
+							start();
+				        }
+
+				    });	
+
+				})(cities.capitalCities[i].capitalCity);
+
+			}
+
+		});
+
+
+	}
+
+	function start(){
+
+		console.log('START GAME');
+
+		$scope.actualCitieIndexToSearch = 0;
+
+	}
+
+	function cleanMap(){
+
+		$scope.map.center.latitude = 49.4;
+		$scope.map.center.longitude = 14.4;
+		$scope.map.zoom = 4;
+
 		$scope.marker = {
-			id: 0,
-			options: {
-	            draggable: false
-	        }			
+			id: 0		
+		};
+
+		$scope.markerCitie = {
+			id: 1		
 		};	
+
+		$scope.distance = 0;
+		$scope.distanceMsg = "";
+
+		$scope.noNext = true;
+		$scope.noCheck = true;		
+
+	}
+
+
+	function showCity(index){
+
+		var city = $scope.cities[index];
+
+		$scope.map.center.latitude = city.lat;
+		$scope.map.center.longitude = city.long;
+		$scope.map.zoom = 4;		
+
+
+		$scope.markerCitie = {
+			id: 1,
+			coords: {
+				latitude: city.lat,
+				longitude: city.long
+			},
+			options: {
+				labelContent: city.capitalCity,
+				labelAnchor: "22 55",
+				labelClass: "marker-class",
+				icon: "/img/city_marker.png"
+			}			
+		};
+
+	}
+
+	function distance(){
+
+		var pos1 = new google.maps.LatLng($scope.markerCitie.coords.latitude, $scope.markerCitie.coords.longitude);
+		var pos2 = new google.maps.LatLng($scope.marker.coords.latitude, $scope.marker.coords.longitude);
+
+		$scope.distance = parseInt(google.maps.geometry.spherical.computeDistanceBetween(pos1,pos2) / 1000);
+
+	}
+
+	function endGame(){
+
+		
+
+		var modalInstance = $modal.open({
+			templateUrl: 'endGame.html',
+			controller: 'EndGameCtrl',
+			resolve: {
+				cities: function(){
+					return $scope.citiesPlaced;
+				},
+				km: function(){
+					return $scope.kmLeft;
+				}
+			}
+		});
+
+		modalInstance.result.then(function () {
+				init();		
+			}, function () {
+				init();
+			});
+
+	}	
+
+
+	$scope.check = function(){
+
+		showCity($scope.actualCitieIndexToSearch);
+
+		distance();
+
+		$scope.distanceMsg = $scope.distance + " KM To " + $scope.cities[$scope.actualCitieIndexToSearch].capitalCity;
+
+		$scope.kmLeft = $scope.kmLeft - $scope.distance;
+
+		if($scope.distance < 50){
+
+			$scope.placed = true;
+
+			$scope.citiesPlaced = $scope.citiesPlaced + 1;
+
+		}else{
+
+			$scope.placed = false;
+
+		}
+
+
+		if( $scope.kmLeft < 0){
+			
+			console.log('END GAME');
+
+			endGame();
+
+		}else{
+
+			$scope.noNext = false;
+			$scope.noCheck = true;		
+
+		}
+
+	}
+
+	$scope.next = function(){
+
+		cleanMap();
+
+		$scope.actualCitieIndexToSearch++;
+
+		if( $scope.actualCitieIndexToSearch >= $scope.cities.length ){
+
+			console.log('END GAME');
+
+			endGame();
+
+		}
+
+	}
+
+	uiGmapGoogleMapApi.then(function(maps) {
+
+		init();
+
 				
 
     });	

@@ -104,7 +104,8 @@ Nicholas McCready - https://twitter.com/nmccready
             window[randomizedFunctionName] = null;
             deferred.resolve(window.google.maps);
           };
-          if (window.navigator.connection && window.navigator.connection.type === window.Connection.NONE) {
+
+          if (window.navigator.connection && window.navigator.connection.type === "none") {
             document.addEventListener('online', function() {
               if (!isGoogleMapsLoaded()) {
                 return includeScript(options);
