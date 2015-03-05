@@ -21,6 +21,7 @@
 
 		h1{
 			text-align: center;
+			font-size: 30px;
 		}
 
 		html, body, .container-fluid{
@@ -40,6 +41,11 @@
 			color: #333333;
 		}
 
+		.instructions{
+			font-size: 15px;
+			color: #dddddd;
+		}
+
 		.green{
 			color: #5cb85c !important;
 			font-weight: bold;
@@ -57,6 +63,14 @@
 		}
 
 		.angular-google-map-container { height: 450px; }
+
+		@media (max-width: 600px) {
+		  .angular-google-map-container { height: 320px; }
+
+			h1{
+				font-size: 20px;
+			}		  
+		}		
 	</style>
 
 </head>
@@ -72,23 +86,28 @@
 		</div>
 		<div class="row" style="height:100%;">
 			<div class="col-md-4">
-				<p><span>{{ citiesPlaced }}</span> cities placed .</p>
-				<p><span>{{ kmLeft }}</span> kilometers left.</p>
-				<div ng-show="noNext">
-					<p><i>Select the location of<i>... <span>{{ cities[actualCitieIndexToSearch].capitalCity }}</span></p>
+				<div ng-show="loaded">
+					<p><span>{{ citiesPlaced }}</span> cities placed .</p>
+					<p><span>{{ kmLeft }}</span> kilometers left.</p>
+					<div ng-show="noNext">
+						<p><i>Select the location of<i>... <span>{{ cities[actualCitieIndexToSearch].capitalCity }}</span></p>
+					</div>
+					<div class="form-group">
+						<button class="btn btn-success" ng-show="noNext" ng-disabled="noCheck" ng-click="check()">Check!</button>
+					</div>								
+					<div ng-hide="noNext">
+						<p ng-class="{green: placed, red: !placed}"> {{ distanceMsg }} </p>
+					</div>				
+					<div class="form-group">
+						<button class="btn btn-primary" ng-hide="noNext" ng-click="next()">Next city ( {{ actualCitieIndexToSearch + 1 }} / {{ cities.length }} )</button>
+					</div>								
 				</div>
-				<div class="form-group">
-					<button class="btn btn-success" ng-show="noNext" ng-disabled="noCheck" ng-click="check()">Check!</button>
-				</div>								
-				<div ng-hide="noNext">
-					<p ng-class="{green: placed, red: !placed}"> {{ distanceMsg }} </p>
-				</div>				
-				<div class="form-group">
-					<button class="btn btn-primary" ng-hide="noNext" ng-click="next()">Next ( {{ actualCitieIndexToSearch + 1 }} / {{ cities.length }} )</button>
-				</div>								
-
+				<div ng-hide="loaded">
+					LOADING...
+				</div>
 			</div>
 			<div class="col-md-8">
+				<p class="instructions" ng-show="loaded">Click on the map to add a marker</p>
 				<ui-gmap-google-map center="map.center" zoom="map.zoom" events="map.events" options="map.options">
 					<ui-gmap-marker coords="marker.coords" options="marker.options" events="marker.events" idkey="marker.id">
         			</ui-gmap-marker>

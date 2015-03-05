@@ -10,6 +10,8 @@ citiesQuizApp.config(function(uiGmapGoogleMapApiProvider) {
 
 var citiesQuizService = angular.module('citiesQuizService', []);
 
+
+//SERVICE THAT RETURN THE JSON OF THE CITIES
 citiesQuizService.factory('Cities', function($http) {
 	return {
 		get : function() {
@@ -20,10 +22,20 @@ citiesQuizService.factory('Cities', function($http) {
 
 var citiesQuizController = angular.module('citiesQuizController', []);
 
-citiesQuizController.controller('citiesQuizMainController', function($scope, $modal, Cities, uiGmapGoogleMapApi) {
 
+//MAIN CONTROLLER
+citiesQuizController.controller('citiesQuizMainController', function($window, $scope, $modal, Cities, uiGmapGoogleMapApi) {
+
+	//INIT THE APP
 	function init(){
 
+		$scope.zoom = 4;
+
+		if($window.innerWidth < 600){
+			$scope.zoom = 3; 
+		}
+
+		$scope.loaded = false;
 
 		$scope.citiesPlaced = 0;
 		$scope.citiesPlacedMsg = $scope.citiesPlaced + " cities placed.";
@@ -49,71 +61,71 @@ citiesQuizController.controller('citiesQuizMainController', function($scope, $mo
 		};			
 
 		$scope.map = { center: { latitude: 49.4, longitude: 14.4 }, 
-						zoom: 4,
-						options: {
-							streetViewControl: false,
-							styles: [
-								{
-									featureType: "road",
-									elementType: "all",
-									stylers: [
-									  { visibility: "off" }
-									]
-								},
-								{
-									featureType: "landscape",
-									elementType: "all",
-									stylers: [
-									  { visibility: "off" }
-									]
-								},
-								{
-									featureType: "all",
-									elementType: "labels",
-									stylers: [
-									  { visibility: "off" }
-									]
-								},
-								{
-									featureType: "poi",
-									elementType: "labels",
-									stylers: [
-									  { visibility: "off" }
-									]
-								},
-								{
-									featureType: "administrative.province",
-									elementType: "all",
-									stylers: [
-									  { visibility: "off" }
-									]
-								}
+			zoom: $scope.zoom,
+			options: {
+				streetViewControl: false,
+				styles: [
+					{
+						featureType: "road",
+						elementType: "all",
+						stylers: [
+						  { visibility: "off" }
+						]
+					},
+					{
+						featureType: "landscape",
+						elementType: "all",
+						stylers: [
+						  { visibility: "off" }
+						]
+					},
+					{
+						featureType: "all",
+						elementType: "labels",
+						stylers: [
+						  { visibility: "off" }
+						]
+					},
+					{
+						featureType: "poi",
+						elementType: "labels",
+						stylers: [
+						  { visibility: "off" }
+						]
+					},
+					{
+						featureType: "administrative.province",
+						elementType: "all",
+						stylers: [
+						  { visibility: "off" }
+						]
+					}
 
-							]
-						},
-						events: {
-				            click: function (mapModel, eventName, originalEventArgs) {
-				            	$scope.$apply(function(){
+				]
+			},
+			events: {
+	            click: function (mapModel, eventName, originalEventArgs) {
+	            	$scope.$apply(function(){
 
-				            		$scope.noCheck = false;
+	            		$scope.noCheck = false;
 
-									var e = originalEventArgs[0];
+						var e = originalEventArgs[0];
 
-									$scope.marker = {
-									    id: 0,
-									    coords: {
-									        latitude: e.latLng.lat(),
-									        longitude: e.latLng.lng()
-									    },
-									    options: {
-	            							draggable: false
-	        							}
-									};
+						$scope.marker = {
+						    id: 0,
+						    coords: {
+						        latitude: e.latLng.lat(),
+						        longitude: e.latLng.lng()
+						    },
+						    options: {
+    							draggable: true
+							}
+						};
 
-								});
-				            }
-				        }
-          			};
+					});
+	            }
+	        }
+		};
 
 
 		Cities.get().success(function(cities) {
@@ -149,6 +161,8 @@ citiesQuizController.controller('citiesQuizMainController', function($scope, $mo
 				        //COMPROBAMOS SI YA PODEMOS INICIAR LA APLICACIÓN
 				        if(j == cities.capitalCities.length){
 							start();
+
+							$scope.$apply();
 				        }
 
 				    });	
@@ -162,19 +176,23 @@ citiesQuizController.controller('citiesQuizMainController', function($scope, $mo
 
 	}
 
+	//START THE APP
 	function start(){
 
 		console.log('START GAME');
+
+		$scope.loaded = true;
 
 		$scope.actualCitieIndexToSearch = 0;
 
 	}
 
+	//CLEAN THE MARKERS AND ADJUST THE MAP AND THE INTERFACE  
 	function cleanMap(){
 
 		$scope.map.center.latitude = 49.4;
 		$scope.map.center.longitude = 14.4;
-		$scope.map.zoom = 4;
+		$scope.map.zoom = $scope.zoom;
 
 		$scope.marker = {
 			id: 0		
@@ -192,7 +210,7 @@ citiesQuizController.controller('citiesQuizMainController', function($scope, $mo
 
 	}
 
-
+	//SHOW THE MARKER OF THE CITY
 	function showCity(index){
 
 		var city = $scope.cities[index];
@@ -218,6 +236,7 @@ citiesQuizController.controller('citiesQuizMainController', function($scope, $mo
 
 	}
 
+	//CALCUL THE DISTANCE BETWEEN THE MARKERS
 	function distance(){
 
 		var pos1 = new google.maps.LatLng($scope.markerCitie.coords.latitude, $scope.markerCitie.coords.longitude);
@@ -227,9 +246,8 @@ citiesQuizController.controller('citiesQuizMainController', function($scope, $mo
 
 	}
 
+	//SHOW THE MODAL WITH THE RESULTS AND INIT THE GAME WHEN THE USER CLOSE THE MODAL
 	function endGame(){
-
-		
 
 		var modalInstance = $modal.open({
 			templateUrl: 'endGame.html',
@@ -252,14 +270,14 @@ citiesQuizController.controller('citiesQuizMainController', function($scope, $mo
 
 	}	
 
-
+	//CHECK THE DISTANCE BETWEEN THE MARKERS AND SHOW THE RESULT. END THE GAME IF THE kmLeft < 0
 	$scope.check = function(){
 
 		showCity($scope.actualCitieIndexToSearch);
 
 		distance();
 
-		$scope.distanceMsg = $scope.distance + " KM To " + $scope.cities[$scope.actualCitieIndexToSearch].capitalCity;
+		$scope.distanceMsg = $scope.distance + " KM to " + $scope.cities[$scope.actualCitieIndexToSearch].capitalCity;
 
 		$scope.kmLeft = $scope.kmLeft - $scope.distance;
 
@@ -291,6 +309,7 @@ citiesQuizController.controller('citiesQuizMainController', function($scope, $mo
 
 	}
 
+	//EVENT WHEN THE USER CLICK IN THE NEXT BUTTON. CLEAN THE MAP, UPDATE THE INDEX AND CHECK IF THE GAME IS FINISH
 	$scope.next = function(){
 
 		cleanMap();
@@ -307,16 +326,16 @@ citiesQuizController.controller('citiesQuizMainController', function($scope, $mo
 
 	}
 
+	//INIT GOOGLE MAPS
 	uiGmapGoogleMapApi.then(function(maps) {
 
 		init();
-
-				
 
     });	
 
 });
 
+//CONTROLLER FOR THE MODAL
 citiesQuizController.controller('EndGameCtrl', function($scope, $modalInstance, cities, km) {
 
 	$scope.cities = cities;
