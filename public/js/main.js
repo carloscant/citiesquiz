@@ -127,7 +127,7 @@ citiesQuizController.controller('citiesQuizMainController', function($window, $s
 	        }
 		};
 
-
+		//LAT AND LOG OH EACH CITY
 		Cities.get().success(function(cities) {
 
 			var geocoder = new google.maps.Geocoder();
@@ -158,7 +158,7 @@ citiesQuizController.controller('citiesQuizMainController', function($window, $s
 				            console.log("Unknown address: " + cityName);
 				        }
 
-				        //COMPROBAMOS SI YA PODEMOS INICIAR LA APLICACIÓN
+				        //CHECK IF WE CAN START THE APP
 				        if(j == cities.capitalCities.length){
 							start();
 
@@ -281,6 +281,7 @@ citiesQuizController.controller('citiesQuizMainController', function($window, $s
 
 		$scope.kmLeft = $scope.kmLeft - $scope.distance;
 
+		//CHECK IF IS OK
 		if($scope.distance < 50){
 
 			$scope.placed = true;
@@ -292,7 +293,6 @@ citiesQuizController.controller('citiesQuizMainController', function($window, $s
 			$scope.placed = false;
 
 		}
-
 
 		if( $scope.kmLeft < 0){
 			

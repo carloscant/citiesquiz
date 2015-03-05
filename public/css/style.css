@@ -1,0 +1,49 @@
+h1{
+	text-align: center;
+	font-size: 30px;
+}
+	
+
+button{
+	width: 100%;
+}	
+
+p{
+	font-size: 20px;
+	color: #aaaaaa;
+}
+
+p span{
+	color: #333333;
+}
+
+.instructions{
+	font-size: 15px;
+	color: #dddddd;
+}
+
+.green{
+	color: #5cb85c !important;
+	font-weight: bold;
+
+}
+
+.red{
+	color: red !important;
+	font-weight: bold;
+}
+
+.marker-class{
+	font-size: 15px;
+	font-weight: bold;
+}
+
+.angular-google-map-container { height: 450px; }
+
+@media (max-width: 600px) {
+  .angular-google-map-container { height: 320px; }
+
+	h1{
+		font-size: 20px;
+	}		  
+}		
